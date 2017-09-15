@@ -27,4 +27,25 @@ private:
     void pops(std::deque<KeyOpFieldsValuesTuple> &vkco, std::string prefix = EMPTY_PREFIX);
 };
 
+class ConsumerKeySpaceTable : public ConsumerStateTable
+{
+public:
+
+    ConsumerKeySpaceTable(DBConnector *db, std::string tableName);
+
+    /* Get a singlesubscribe channel rpop */
+    /* If there is nothing to pop, the output paramter will have empty key and op */
+    void pop(KeyOpFieldsValuesTuple &kco, std::string prefix = EMPTY_PREFIX);
+
+private:
+    std::string m_keyspace;
+    std::deque<KeyOpFieldsValuesTuple> m_buffer;
+
+    /* Get multiple pop elements */
+    void pops(std::deque<KeyOpFieldsValuesTuple> &vkco, std::string prefix = EMPTY_PREFIX);
+    /* Read a value from the DB directly */
+    /* Returns false if the key doesn't exists */
+    bool get(std::string key, std::vector<FieldValueTuple> &values);
+};
+
 }
